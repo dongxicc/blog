@@ -6,9 +6,12 @@ import com.cc.blog.model.User;
 import com.cc.blog.service.UserService;
 import com.cc.blog.util.EncodeMd5;
 import com.cc.blog.util.MapFormatUtil;
+import com.cc.blog.util.NetworkIpUtil;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -20,6 +23,8 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private HttpServletRequest request;
 
     @PostMapping
     public Map register(@RequestBody User user) {
@@ -38,8 +43,8 @@ public class UserController {
 
 
     @GetMapping
-    public Map login(@RequestParam("name") String name, @RequestParam("password") String password) {
-        Map result = userService.login(name, password);
+    public Map login(@RequestParam("name") String name, @RequestParam("password") String password) throws IOException {
+        Map result = userService.login(name, password, NetworkIpUtil.getClientIpAddr(request));
         if (result != null) {
             return MapFormatUtil.returnSuccess(result);
         } else {

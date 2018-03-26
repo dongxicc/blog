@@ -11,6 +11,15 @@ public class UserToken {
     Long timeStamp;
     String ip;
 
+   public UserToken(int id,String name,String role,Long timeStamp,String ip){
+        this.id = id;
+        this.role = role;
+        this.name = name;
+        this.timeStamp= timeStamp;
+        this.ip = ip;
+    }
+
+    public UserToken(){}
     public int getId() {
         return id;
     }

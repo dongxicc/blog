@@ -3,6 +3,7 @@ package com.cc.blog.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cc.blog.model.User;
+import com.cc.blog.model.UserToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -27,7 +28,7 @@ public class JwtUtil {
      *
      * @return
      */
-    public static String createJWT( User user) {
+    public static String createJWT( UserToken userToken) {
         //生成签名
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET);
@@ -35,8 +36,8 @@ public class JwtUtil {
         //添加构成JWT的参数
         JwtBuilder builder = Jwts.builder()
                 .setHeaderParam("typ", "JWT")
-                .setId(user.getId().toString())
-                .claim(KEY_TOKEN, JSONObject.toJSONString(user))
+                .setId(String.valueOf(userToken.getId()))
+                .claim(KEY_TOKEN, JSONObject.toJSONString(userToken))
                 .claim(KEY_TIMESTAMP,new Date().getTime())
                 .signWith(signatureAlgorithm, key);
         //添加Token过期时间
@@ -52,14 +53,10 @@ public class JwtUtil {
      * @return
      */
     public static String parseJWT(String token, String secrete) {
-        try {
             Claims claims = Jwts.parser()
                     .setSigningKey(DatatypeConverter.parseBase64Binary(secrete))
                     .parseClaimsJws(token).getBody();
             return claims.get(KEY_TOKEN).toString();
-        } catch (Exception ex) {
-            return null;
-        }
     }
 
 }

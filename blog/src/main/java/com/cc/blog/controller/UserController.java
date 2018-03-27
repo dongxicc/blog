@@ -1,7 +1,8 @@
-package com.cc.blog.Controller;
+package com.cc.blog.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.cc.blog.interfaces.Authority;
 import com.cc.blog.model.User;
 import com.cc.blog.service.UserService;
 import com.cc.blog.util.EncodeMd5;
@@ -51,12 +52,13 @@ public class UserController {
             return MapFormatUtil.returnFail(result);
         }
     }
-
+    @Authority
     @GetMapping("/{id}")
     public Map userInfo(@PathVariable("id") int id) {
         return MapFormatUtil.returnSuccess(userService.userInfo(id));
     }
 
+    @Authority
     @PutMapping
     public Map updateInfo(@RequestBody User user) {
         user.setCreatetime(null);

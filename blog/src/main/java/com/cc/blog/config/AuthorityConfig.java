@@ -24,6 +24,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 角色拦截
@@ -93,6 +94,7 @@ public class AuthorityConfig extends HandlerInterceptorAdapter {
             result.addAll(roleSet);
             result.retainAll(authSet);
             if (result != null && !result.isEmpty()) {
+                redisTemplate.opsForValue().set(userToken.getId(),token,2, TimeUnit.HOURS);
                 return true;
             }
         }
